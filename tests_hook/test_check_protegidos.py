@@ -14,6 +14,11 @@ def test_detecta_ficheros_protegidos():
     assert check.ficheros_protegidos_tocados(ficheros) == ["tests/test_facturacion.py", ".github/hooks/x.py"]
 
 
+def test_protege_el_propio_check_y_la_config_de_pytest():
+    ficheros = ["scripts/check_protegidos.py", "conftest.py", "pytest.ini"]
+    assert check.ficheros_protegidos_tocados(ficheros) == ficheros
+
+
 def test_ignora_lo_demas():
     assert check.ficheros_protegidos_tocados(["facturacion.py", "tests_hook/a.py"]) == []
 

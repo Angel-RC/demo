@@ -11,7 +11,7 @@ import argparse
 import os
 import subprocess
 
-PROTEGIDOS = ("tests/", ".github/")
+PROTEGIDOS = ("tests/", ".github/", "scripts/", "conftest.py", "pytest.ini")
 ETIQUETA_APROBACION = "cambio-de-especificacion"
 
 

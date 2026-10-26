@@ -1,6 +1,7 @@
 # Quien ejecuta no verifica: esto corre fuera de la máquina del agente.
-# Si un PR toca tests/ o .github/, falla salvo que una persona añada la
-# etiqueta `cambio-de-especificacion`.
+# Si un PR toca tests/, .github/, scripts/ o la configuración de pytest, falla
+# salvo que una persona añada la etiqueta `cambio-de-especificacion`.
+# El check se ejecuta desde la rama base: un PR no puede debilitar su propio guardia.
 name: Ficheros protegidos
 
 on:
@@ -20,7 +21,9 @@ jobs:
       - name: Comprobar ficheros protegidos
         env:
           ETIQUETAS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
-        run: python scripts/check_protegidos.py --base origin/${{ github.base_ref }}
+        run: |
+          git show origin/${{ github.base_ref }}:scripts/check_protegidos.py > "$RUNNER_TEMP/check_protegidos.py"
+          python "$RUNNER_TEMP/check_protegidos.py" --base origin/${{ github.base_ref }}
 
   tests:
     runs-on: ubuntu-latest

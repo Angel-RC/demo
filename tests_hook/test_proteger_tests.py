@@ -14,7 +14,8 @@ hook = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(hook)
 
 MOTIVO = (
-    "tests/ y .github/hooks/ están protegidos: los tests son la especificación del negocio. "
+    "Los tests, su configuración y el propio guardia están protegidos: "
+    "los tests son la especificación del negocio. "
     "Si crees que hay que cambiar una regla de negocio, detente y pregúntale a la persona."
 )
 
@@ -35,6 +36,21 @@ DENEGAR = [
     evento("bash", {"command": "echo x > tests/test_facturacion.py"}),
     evento("powershell", {"command": "Set-Content tests\\test_facturacion.py 'x'"}),
     evento("run_in_terminal", {"command": "python scripts/hook.py off"}),
+    # Rutas alternativas para apagar al guardia (revisión final, Important 1)
+    evento("run_in_terminal", {"command": "cd scripts; python hook.py off"}),
+    evento("run_in_terminal", {"command": "python -m scripts.hook off"}),
+    evento("run_in_terminal", {"command": "python scripts/reiniciar_demo.py"}),
+    evento("powershell", {"command": "del .github\\hooks\\proteger-tests.json"}),
+    # Escrituras en tests/ por terminal con alias de PowerShell, git o Python
+    evento("powershell", {"command": "del tests\\test_facturacion.py"}),
+    evento("powershell", {"command": "copy x.py tests\\test_facturacion.py"}),
+    evento("bash", {"command": "git checkout HEAD~1 -- tests/"}),
+    evento("bash", {"command": "python -c \"from pathlib import Path; Path('tests/t.py').write_text('')\""}),
+    # Hacer pasar los tests sin tocar tests/ (Important 5)
+    evento("create_file", {"filePath": "conftest.py", "content": "import pytest"}),
+    evento("edit", {"path": "pytest.ini"}),
+    # Windows no distingue mayúsculas (Minor 1, revaluado)
+    evento("edit", {"path": "C:\\demo\\Tests\\test_facturacion.py"}),
 ]
 
 PERMITIR = [

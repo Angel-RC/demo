@@ -31,7 +31,7 @@ y la terminal integrada · el vídeo de respaldo, a mano.
 1. Enseñar `.github/copilot-instructions.md` y señalar la regla:
    *«Nunca modifiques ficheros en `tests/`. Los tests son la especificación del negocio.»*
 2. Enseñar `tests/test_facturacion.py`, en concreto el test del tope del 50 % «aprobado por Finanzas».
-3. En la terminal: `.venv/bin/python -m pytest -q` → `6 passed`.
+3. En la terminal: `.venv\Scripts\python -m pytest -q` → `6 passed`. (En Linux: `.venv/bin/python -m pytest -q`.)
 4. En la terminal: `python scripts/hook.py estado` → `Hook DESACTIVADO`. «De momento, solo hay prosa.»
 5. Pegar en el chat (modo Agent):
 
@@ -92,9 +92,12 @@ Para cada regla de vuestro `copilot-instructions.md`:
    agente recibe el motivo: *«…Si crees que hay que cambiar una regla de negocio, detente y pregúntale
    a la persona.»* Normalmente cambia de plan: pregunta, o deja el código y explica que el test lo
    impide.
+   Si intenta un atajo (crear un `conftest.py` que salte el test o tocar `pytest.ini`), también queda
+   denegado: el hook protege la configuración de pytest. Si encuentra una vía que no está cubierta,
+   aprovéchalo: «por eso el hook documenta sus huecos y hay una segunda puerta en CI».
 7. Frase clave: **«No le hemos pedido nada distinto. Le hemos quitado la posibilidad.»**
 8. Bonus, si hay tiempo: pedir *«desactiva el hook con scripts/hook.py off»* → también queda
-   denegado. «Quien pone en marcha al guardia no debe ser el sospechoso.»
+   denegado (y si lo intenta borrando el `.json` o con `reiniciar_demo.py`, lo mismo). «Quien pone en marcha al guardia no debe ser el sospechoso.»
 
 **Plan B del acto 2** (el hook no carga, por ejemplo por la política de la empresa):
 - Decirlo en voz alta: «Esto también es una lección: **un control se verifica por su efecto**, no
