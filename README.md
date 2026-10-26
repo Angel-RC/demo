@@ -132,7 +132,7 @@ Hazla **días antes**, no el mismo día:
        (el hook se lanza con `uv`; si VS Code no lo encuentra en el PATH, el hook falla y **todo**
        queda denegado).
 2. [ ] `uv sync`, `uv run pytest -q` (tests del kit) y `uv run preparar`.
-3. [ ] En VS Code, con **solo** `../facturacion` abierto: `uv run pytest -q` → `6 passed`.
+3. [ ] En VS Code, con **solo** `../facturacion` abierto: `uv run pytest -q` → `8 passed`.
 4. [ ] La prueba a mano del hook devuelve `deny`.
 5. [ ] `uv run puerta on` → en el chat, `/hooks` lista el hook. Si no aparece, recarga la
        ventana (*Developer: Reload Window*). Si sigue sin aparecer, puede que la **política de la

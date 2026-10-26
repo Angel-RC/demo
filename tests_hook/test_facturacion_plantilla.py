@@ -11,4 +11,4 @@ def test_tests_de_negocio_en_verde():
     r = subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider"],
                        cwd=PLANTILLA, capture_output=True, text=True)
     assert r.returncode == 0, r.stdout
-    assert "6 passed" in r.stdout
+    assert "8 passed" in r.stdout

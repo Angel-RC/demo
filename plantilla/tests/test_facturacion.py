@@ -1,6 +1,6 @@
 import pytest
 
-from facturacion import calcular_total
+from facturacion import DESCUENTOS_POR_TIPO, calcular_total, total_cliente
 
 
 def test_total_sin_descuento():
@@ -35,3 +35,14 @@ def test_base_negativa_no_permitida():
     """Una base imponible negativa es un error."""
     with pytest.raises(ValueError):
         calcular_total(-1)
+
+
+def test_total_cliente_premium():
+    """Un cliente premium tiene un 25 % de descuento."""
+    assert total_cliente(100, "premium") == 90.75
+
+
+def test_todos_los_tipos_de_cliente_cumplen_las_reglas():
+    """Cada tipo de cliente se factura con las reglas de calcular_total."""
+    for tipo, descuento in DESCUENTOS_POR_TIPO.items():
+        assert total_cliente(100, tipo) == calcular_total(100, descuento)
