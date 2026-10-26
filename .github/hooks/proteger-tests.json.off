@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": "python3 .github/hooks/proteger_tests.py",
+        "powershell": "python .github/hooks/proteger_tests.py",
+        "timeoutSec": 10
+      }
+    ]
+  }
+}
