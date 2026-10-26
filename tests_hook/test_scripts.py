@@ -26,7 +26,7 @@ def test_on_activa_el_hook(tmp_path):
     hooks = preparar(tmp_path)
     assert "Hook ACTIVADO" in interruptor(tmp_path, "on")
     assert (hooks / "proteger-tests.json").exists()
-    assert not (hooks / "proteger-tests.json.off").exists()
+    assert (hooks / "proteger-tests.json.off").exists()  # la plantilla versionada no cambia
 
 
 def test_on_dos_veces_no_falla(tmp_path):
@@ -48,3 +48,10 @@ def test_off_desactiva_el_hook(tmp_path):
     assert "Hook DESACTIVADO" in interruptor(tmp_path, "off")
     assert (hooks / "proteger-tests.json.off").exists()
     assert not (hooks / "proteger-tests.json").exists()
+
+
+def test_activar_no_deja_cambios_en_git():
+    """Encender el hook no debe aparecer como cambio (ensuciaría el check de CI en vivo)."""
+    import subprocess as sp
+    r = sp.run(["git", "check-ignore", "-q", ".github/hooks/proteger-tests.json"], cwd=RAIZ)
+    assert r.returncode == 0

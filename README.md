@@ -18,7 +18,7 @@ de José Ramón Pérez Agüera (Gemba).
 | `tests/` | Tests de negocio. **Son la especificación** y están protegidos |
 | `.github/copilot-instructions.md` | La regla en prosa: «Nunca modifiques ficheros en `tests/`» |
 | `.github/hooks/proteger_tests.py` | **La puerta**: hook `preToolUse` que deniega escrituras en `tests/` y en el propio guardia |
-| `.github/hooks/proteger-tests.json.off` | Configuración del hook. Con `.off` está **desactivado**; sin `.off`, activo |
+| `.github/hooks/proteger-tests.json.off` | Configuración del hook, **desactivada**. `scripts/hook.py on` la copia a `proteger-tests.json` (ignorado por git), que es el que carga Copilot |
 | `scripts/hook.py` | Interruptor: `on`, `off`, `estado` |
 | `scripts/reiniciar_demo.py` | Deja el repo como al principio entre ensayos |
 | `scripts/check_protegidos.py` | **Segunda puerta**: falla si los cambios tocan `tests/` o `.github/` |

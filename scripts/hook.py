@@ -1,10 +1,12 @@
 """Interruptor del hook de la demo: python scripts/hook.py on|off|estado
 
-Copilot carga los ficheros .github/hooks/*.json. Para desactivar el hook
-lo renombramos a .json.off; para activarlo, al revés.
+Copilot carga los ficheros .github/hooks/*.json. La configuración versionada
+es proteger-tests.json.off (inactiva); activar = copiarla a proteger-tests.json
+(ignorado por git, para que no aparezca como cambio); desactivar = borrar la copia.
 """
 
 import argparse
+import shutil
 from pathlib import Path
 
 
@@ -19,9 +21,9 @@ def main() -> None:
     inactivo = hooks / "proteger-tests.json.off"
 
     if args.orden == "on" and inactivo.exists():
-        inactivo.rename(activo)
-    elif args.orden == "off" and activo.exists():
-        activo.rename(inactivo)
+        shutil.copyfile(inactivo, activo)
+    elif args.orden == "off":
+        activo.unlink(missing_ok=True)
 
     if activo.exists():
         print("Hook ACTIVADO")
