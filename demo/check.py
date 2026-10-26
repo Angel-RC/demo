@@ -1,22 +1,23 @@
-"""Segunda puerta: falla si los cambios respecto a <base> tocan ficheros protegidos.
+"""Segunda puerta, en local: uv run check
 
-    uv run check <base>
-
-Corre en CI, fuera de la máquina del agente: quien ejecuta no verifica.
+La misma regla que guardia/ficheros-protegidos.yml aplicaría en CI: falla si
+los cambios del proyecto respecto a `inicio` tocan ficheros protegidos.
 """
 
 import subprocess
-import sys
+
+from demo import argumentos
 
 PROTEGIDOS = ("tests/", ".github/")
 
 
-def main() -> None:
-    cambiados = subprocess.run(["git", "diff", "--name-only", sys.argv[1]],
+def main(argv: list[str] | None = None) -> int:
+    proyecto = argumentos(argv, "Comprueba si se han tocado ficheros protegidos.").proyecto
+    cambiados = subprocess.run(["git", "-C", str(proyecto), "diff", "--name-only", "inicio"],
                                capture_output=True, text=True, check=True).stdout.split()
     tocados = [f for f in cambiados if f.startswith(PROTEGIDOS)]
 
     for f in tocados:
         print(f"Fichero protegido modificado: {f}")
     print("ERROR: cambios en ficheros protegidos." if tocados else "OK: ningún fichero protegido modificado.")
-    sys.exit(1 if tocados else 0)
+    return 1 if tocados else 0  # código de salida

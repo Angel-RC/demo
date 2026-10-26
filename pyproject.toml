@@ -7,8 +7,9 @@ dependencies = []
 
 # Atajos para la demo: uv run <nombre>
 [project.scripts]
+preparar = "demo.preparar:main"    # uv run preparar  (genera ../facturacion)
 puerta = "demo.puerta:main"        # uv run puerta on | off | estado
-check = "demo.check:main"          # uv run check demo-inicio
+check = "demo.check:main"          # uv run check
 reiniciar = "demo.reiniciar:main"  # uv run reiniciar
 
 [dependency-groups]
@@ -23,5 +24,5 @@ module-name = "demo"
 module-root = ""
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests_hook"]
 pythonpath = ["."]

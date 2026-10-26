@@ -1,0 +1,16 @@
+[project]
+name = "facturacion"
+version = "1.4.0"
+description = "Cálculo de facturas: IVA y descuentos"
+requires-python = ">=3.10"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

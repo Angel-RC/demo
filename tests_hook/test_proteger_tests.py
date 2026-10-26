@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-HOOK = Path(__file__).resolve().parent.parent / ".github" / "hooks" / "proteger_tests.py"
+HOOK = Path(__file__).resolve().parent.parent / "guardia" / "proteger_tests.py"
 
 
 def decidir(herramienta, argumentos):
@@ -25,6 +25,7 @@ def decidir(herramienta, argumentos):
     ("edit", {"path": ".github/hooks/proteger_tests.py"}),
     ("run_in_terminal", {"command": "uv run puerta off"}),
     ("run_in_terminal", {"command": "uv run reiniciar"}),
+    ("run_in_terminal", {"command": "rm -rf .github/hooks"}),
 ])
 def test_deniega(herramienta, argumentos):
     assert decidir(herramienta, argumentos) == "deny"

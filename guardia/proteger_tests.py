@@ -16,7 +16,7 @@ import os
 import sys
 from pathlib import Path
 
-PROTEGIDOS = ("tests/", ".github/hooks/", "puerta", "reiniciar")
+PROTEGIDOS = ("tests/", ".github/hooks", "puerta", "reiniciar")
 SOLO_LECTURA = {"view", "read_file", "grep", "glob", "list_dir", "file_search", "grep_search"}
 TERMINAL = {"bash", "powershell", "run_in_terminal"}
 

@@ -1,31 +1,29 @@
-"""Interruptor del hook de la demo: uv run puerta on | off | estado
+"""Interruptor de la puerta: uv run puerta on | off | estado
 
-Copilot carga los ficheros .github/hooks/*.json. La configuración versionada
-es proteger-tests.json.off (inactiva); activar = copiarla a proteger-tests.json
-(ignorado por git, para que no aparezca como cambio); desactivar = borrar la copia.
+on copia el hook de guardia/ a .github/hooks/ del proyecto (Copilot lo carga
+desde ahí); off lo borra. En el acto 1 el proyecto no tiene ni rastro del hook.
 """
 
-import argparse
 import shutil
-from pathlib import Path
+
+from demo import GUARDIA, argumentos
+
+FICHEROS = ("proteger-tests.json", "proteger_tests.py")
 
 
 def main(argv: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(description="Activa o desactiva la puerta que protege tests/.")
-    parser.add_argument("orden", choices=["on", "off", "estado"])
-    parser.add_argument("--raiz", type=Path, default=Path(__file__).resolve().parent.parent)
-    args = parser.parse_args(argv)
+    args = argumentos(argv, "Activa o desactiva la puerta que protege tests/.", "on", "off", "estado")
+    hooks = args.proyecto / ".github" / "hooks"
 
-    hooks = args.raiz / ".github" / "hooks"
-    activo = hooks / "proteger-tests.json"
-    inactivo = hooks / "proteger-tests.json.off"
-
-    if args.orden == "on" and inactivo.exists():
-        shutil.copyfile(inactivo, activo)
+    if args.orden == "on":
+        hooks.mkdir(parents=True, exist_ok=True)
+        for nombre in FICHEROS:
+            shutil.copyfile(GUARDIA / nombre, hooks / nombre)
     elif args.orden == "off":
-        activo.unlink(missing_ok=True)
+        for nombre in (*FICHEROS, "hook.log"):
+            (hooks / nombre).unlink(missing_ok=True)
 
-    if activo.exists():
+    if (hooks / "proteger-tests.json").exists():
         print("Puerta ACTIVADA")
         if args.orden == "on":
             print("Compruébalo en el chat de VS Code con /hooks.")
