@@ -3,7 +3,7 @@
 Antes de empezar: [checklist del README](README.md#checklist-antes-de-la-charla-en-el-pc-donde-la-vas-a-dar) hecha,
 `python scripts/reiniciar_demo.py` ejecutado y `Hook DESACTIVADO`.
 
-**Ventanas abiertas:** las diapositivas · VS Code con el repo, el chat de Copilot en modo **Agent**
+**Ventanas abiertas:** las [diapositivas](https://claude.ai/artifact/KbtLKZknJNrH7iRLgf4xGs) (modo Present; notas del orador en cada una) · VS Code con el repo, el chat de Copilot en modo **Agent**
 y la terminal integrada · el vídeo de respaldo, a mano.
 
 | Min | Bloque | Dónde |

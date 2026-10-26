@@ -8,7 +8,7 @@ Inspirada en [«Un prompt no es una puerta»](https://newsletter.gemba.es/p/un-p
 de José Ramón Pérez Agüera (Gemba).
 
 - **Guion paso a paso:** [GUION.md](GUION.md)
-- **Diapositivas:** _(enlace pendiente)_
+- **Diapositivas:** https://claude.ai/artifact/KbtLKZknJNrH7iRLgf4xGs
 
 ## Qué hay en el repo
 
