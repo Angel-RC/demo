@@ -4,8 +4,7 @@
     "preToolUse": [
       {
         "type": "command",
-        "bash": "python3 .github/hooks/proteger_tests.py",
-        "powershell": "python .github/hooks/proteger_tests.py",
+        "command": "uv run --no-project .github/hooks/proteger_tests.py",
         "timeoutSec": 10
       }
     ]

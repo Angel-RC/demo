@@ -1,0 +1,27 @@
+[project]
+name = "demo-guardarrailes"
+version = "0.1.0"
+description = "Demo: un prompt no es una puerta"
+requires-python = ">=3.10"
+dependencies = []
+
+# Atajos para la demo: uv run <nombre>
+[project.scripts]
+puerta = "demo.puerta:main"        # uv run puerta on | off | estado
+check = "demo.check:main"          # uv run check demo-inicio
+reiniciar = "demo.reiniciar:main"  # uv run reiniciar
+
+[dependency-groups]
+dev = ["pytest"]
+
+[build-system]
+requires = ["uv_build>=0.9,<0.13"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "demo"
+module-root = ""
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

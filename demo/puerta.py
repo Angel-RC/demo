@@ -1,4 +1,4 @@
-"""Interruptor del hook de la demo: python scripts/hook.py on|off|estado
+"""Interruptor del hook de la demo: uv run puerta on | off | estado
 
 Copilot carga los ficheros .github/hooks/*.json. La configuración versionada
 es proteger-tests.json.off (inactiva); activar = copiarla a proteger-tests.json
@@ -10,11 +10,11 @@ import shutil
 from pathlib import Path
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(description="Activa o desactiva el hook que protege tests/.")
+def main(argv: list[str] | None = None) -> None:
+    parser = argparse.ArgumentParser(description="Activa o desactiva la puerta que protege tests/.")
     parser.add_argument("orden", choices=["on", "off", "estado"])
     parser.add_argument("--raiz", type=Path, default=Path(__file__).resolve().parent.parent)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     hooks = args.raiz / ".github" / "hooks"
     activo = hooks / "proteger-tests.json"
@@ -26,12 +26,8 @@ def main() -> None:
         activo.unlink(missing_ok=True)
 
     if activo.exists():
-        print("Hook ACTIVADO")
+        print("Puerta ACTIVADA")
         if args.orden == "on":
             print("Compruébalo en el chat de VS Code con /hooks.")
     else:
-        print("Hook DESACTIVADO")
-
-
-if __name__ == "__main__":
-    main()
+        print("Puerta DESACTIVADA")

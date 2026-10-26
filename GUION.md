@@ -1,7 +1,7 @@
 # Guion: «Un prompt no es una puerta» (20 min)
 
 Antes de empezar: [checklist del README](README.md#checklist-antes-de-la-charla-en-el-pc-donde-la-vas-a-dar) hecha,
-la demo reiniciada (`git reset --hard demo-inicio; git clean -fd; python scripts/hook.py off`) y `Hook DESACTIVADO`.
+`uv run reiniciar` ejecutado → `Puerta DESACTIVADA`.
 
 **Ventanas abiertas:** las [diapositivas](https://claude.ai/artifact/KbtLKZknJNrH7iRLgf4xGs) (modo Present; notas del orador en cada una) · VS Code con el repo, el chat de Copilot en modo **Agent**
 y la terminal integrada · el vídeo de respaldo, a mano.
@@ -31,8 +31,8 @@ y la terminal integrada · el vídeo de respaldo, a mano.
 1. Enseñar `.github/copilot-instructions.md` y señalar la regla:
    *«Nunca modifiques ficheros en `tests/`. Los tests son la especificación del negocio.»*
 2. Enseñar `tests/test_facturacion.py`, en concreto el test del tope del 50 % «aprobado por Finanzas».
-3. En la terminal: `.venv\Scripts\python -m pytest -q` → `6 passed`. (En Linux: `.venv/bin/python -m pytest -q`.)
-4. En la terminal: `python scripts/hook.py estado` → `Hook DESACTIVADO`. «De momento, solo hay prosa.»
+3. En la terminal: `uv run pytest -q` → `6 passed`.
+4. En la terminal: `uv run puerta estado` → `Puerta DESACTIVADA`. «De momento, solo hay prosa.»
 5. Pegar en el chat (modo Agent):
 
    ```text
@@ -79,7 +79,7 @@ Para cada regla de vuestro `copilot-instructions.md`:
 4. Activarlo:
 
    ```bash
-   python scripts/hook.py on
+   uv run puerta on
    ```
 
    En el chat: `/hooks` → aparece el hook. (Si no aparece, recargar la ventana.)
@@ -96,7 +96,7 @@ Para cada regla de vuestro `copilot-instructions.md`:
    Si encuentra una vía que el hook no cubre (por ejemplo, un `conftest.py` que salte el test),
    aprovéchalo: «por eso el hook documenta sus huecos y hay una segunda puerta en CI».
 7. Frase clave: **«No le hemos pedido nada distinto. Le hemos quitado la posibilidad.»**
-8. Bonus, si hay tiempo: pedir *«desactiva el hook con scripts/hook.py off»* → también queda
+8. Bonus, si hay tiempo: pedir *«desactiva la puerta con uv run puerta off»* → también queda
    denegado. «Quien pone en marcha al guardia no debe ser el sospechoso.»
 
 **Plan B del acto 2** (el hook no carga, por ejemplo por la política de la empresa):
@@ -105,17 +105,17 @@ Para cada regla de vuestro `copilot-instructions.md`:
 - Enseñar el hook en la terminal:
 
   ```powershell
-  '{"toolName":"edit","toolArgs":{"path":"tests/test_facturacion.py"}}' | python .github\hooks\proteger_tests.py
+  '{"toolName":"edit","toolArgs":{"path":"tests/test_facturacion.py"}}' | uv run --no-project .github\hooks\proteger_tests.py
   ```
 
   → `deny`. Y uno que pasa:
 
   ```powershell
-  '{"toolName":"bash","toolArgs":{"command":"pytest tests/ -q"}}' | python .github\hooks\proteger_tests.py
+  '{"toolName":"run_in_terminal","toolArgs":{"command":"uv run pytest tests/ -q"}}' | uv run --no-project .github\hooks\proteger_tests.py
   ```
 
   → `{}`.
-- Si hay tiempo, ejecutar `.venv\Scripts\python -m pytest tests_hook -q`: «el hook tiene sus propios
+- Si hay tiempo, ejecutar `uv run pytest tests_hook -q`: «el hook tiene sus propios
   tests, que lo verifican por su efecto».
 
 ## 15–18 · Quien ejecuta no verifica (diapositivas 7–8)
@@ -126,7 +126,7 @@ Para cada regla de vuestro `copilot-instructions.md`:
    y ejecutar:
 
    ```bash
-   python scripts/check_protegidos.py demo-inicio
+   uv run check demo-inicio
    ```
 
    → `ERROR: estos cambios tocan ficheros protegidos`, código de salida 1.
@@ -134,7 +134,7 @@ Para cada regla de vuestro `copilot-instructions.md`:
    «Cambiar una regla de negocio es una decisión humana.»
 5. Diapositiva de las tres propiedades de un control real: **se verifica por su efecto**,
    **funciona sin nadie mirando** y **documenta sus huecos**.
-6. Reiniciar: `git reset --hard demo-inicio; git clean -fd; python scripts/hook.py off`.
+6. `uv run reiniciar`.
 
 ## 18–20 · Cierre (diapositivas 9–10)
 
@@ -146,5 +146,5 @@ Para cada regla de vuestro `copilot-instructions.md`:
 ## Después
 
 ```bash
-git reset --hard demo-inicio; git clean -fd; python scripts/hook.py off
+uv run reiniciar
 ```

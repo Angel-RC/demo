@@ -12,13 +12,19 @@ Por eso hay una segunda puerta en CI (.github/workflows/ficheros-protegidos.yml)
 """
 
 import json
+import os
 import sys
+from pathlib import Path
 
-PROTEGIDOS = ("tests/", ".github/hooks/", "hook.py")
+PROTEGIDOS = ("tests/", ".github/hooks/", "puerta", "reiniciar")
 SOLO_LECTURA = {"view", "read_file", "grep", "glob", "list_dir", "file_search", "grep_search"}
 TERMINAL = {"bash", "powershell", "run_in_terminal"}
 
-evento = json.loads(sys.stdin.buffer.read())  # si no es JSON, falla, y Copilot deniega
+entrada = sys.stdin.buffer.read()
+if os.environ.get("HOOK_LOG"):  # para ensayar: ver qué herramientas usa Copilot de verdad
+    with open(Path(__file__).with_name("hook.log"), "ab") as log:
+        log.write(entrada.strip() + b"\n")
+evento = json.loads(entrada)  # si no es JSON, falla, y Copilot deniega
 herramienta = evento.get("toolName", "")
 argumentos = json.dumps(evento.get("toolArgs", "")).replace("\\\\", "/").lower()  # rutas de Windows
 

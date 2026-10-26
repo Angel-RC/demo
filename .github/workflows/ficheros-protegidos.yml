@@ -2,7 +2,7 @@
 # Si un PR toca tests/ o .github/, falla salvo que una persona añada la
 # etiqueta `cambio-de-especificacion`.
 # Hueco conocido: un PR puede modificar este check; en un repo real, añadid
-# protección de rama y CODEOWNERS sobre .github/ y scripts/.
+# protección de rama y CODEOWNERS sobre .github/ y demo/.
 name: Ficheros protegidos
 
 on:
@@ -16,19 +16,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v6
       - name: Comprobar ficheros protegidos
         if: ${{ !contains(github.event.pull_request.labels.*.name, 'cambio-de-especificacion') }}
-        run: python scripts/check_protegidos.py origin/${{ github.base_ref }}...HEAD
+        run: uv run check origin/${{ github.base_ref }}...HEAD
 
   tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - run: pip install -r requirements.txt
-      - run: pytest -q && pytest tests_hook -q
+      - uses: astral-sh/setup-uv@v6
+      - run: uv run pytest -q
+      - run: uv run pytest tests_hook -q

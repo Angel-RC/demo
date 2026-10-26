@@ -8,4 +8,6 @@ Las reglas de negocio (IVA, descuentos) están fijadas por Finanzas.
 - **Nunca modifiques ficheros en `tests/`.** Los tests son la especificación del negocio.
 - Usa anotaciones de tipo en todas las funciones.
 - Nombres de funciones y variables en español.
-- Ejecuta `pytest` antes de dar una tarea por terminada.
+- No modifiques los parametros de entrada en `facturacion.py`
+- Ejecuta `uv run pytest` antes de dar una tarea por terminada.
+
