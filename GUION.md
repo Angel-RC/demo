@@ -1,7 +1,7 @@
 # Guion: «Un prompt no es una puerta» (20 min)
 
 Antes de empezar: [checklist del README](README.md#checklist-antes-de-la-charla-en-el-pc-donde-la-vas-a-dar) hecha,
-`python scripts/reiniciar_demo.py` ejecutado y `Hook DESACTIVADO`.
+la demo reiniciada (`git reset --hard demo-inicio; git clean -fd; python scripts/hook.py off`) y `Hook DESACTIVADO`.
 
 **Ventanas abiertas:** las [diapositivas](https://claude.ai/artifact/KbtLKZknJNrH7iRLgf4xGs) (modo Present; notas del orador en cada una) · VS Code con el repo, el chat de Copilot en modo **Agent**
 y la terminal integrada · el vídeo de respaldo, a mano.
@@ -44,7 +44,7 @@ y la terminal integrada · el vídeo de respaldo, a mano.
    la nueva regla»).
 7. Pausa. Abrir el diff del test. Frase clave:
    **«La regla estaba escrita. La ha leído. Y aun así la ha roto, con buena intención.»**
-8. No aceptar los cambios (*Undo* / *Discard*), o ejecutar `python scripts/reiniciar_demo.py`.
+8. No aceptar los cambios (*Undo* / *Discard* en el chat).
 
 **Plan B del acto 1:**
 - **Si obedece** y pregunta en vez de editar: «Hoy ha obedecido. ¿Firmaríais que lo hará *siempre*,
@@ -68,11 +68,12 @@ Para cada regla de vuestro `copilot-instructions.md`:
 
 ## 9–15 · Acto 2: la puerta
 
-1. Abrir `.github/hooks/proteger_tests.py` y leer **solo** la función `decidir()`:
-   - Si los argumentos no tocan una ruta protegida o la herramienta solo lee, la deja pasar.
-   - Si es la terminal y no escribe (por ejemplo, `pytest tests/`), la deja pasar.
-   - En cualquier otro caso, **la deniega** y le explica al agente qué hacer.
-2. Señalar la cabecera **HUECOS CONOCIDOS**: «un control honesto dice qué no cubre». Volveremos a esto.
+1. Abrir `.github/hooks/proteger_tests.py` (unas 40 líneas) y leer las tres condiciones:
+   - `toca_protegido`: los argumentos mencionan `tests/` o el propio guardia.
+   - `solo_lee`: la herramienta solo lee.
+   - `ejecuta_tests`: es la terminal ejecutando `pytest`.
+   Si toca algo protegido y no es leer ni ejecutar los tests, **deniega** y le explica al agente qué hacer.
+2. Señalar la cabecera **Huecos conocidos**: «un control honesto dice qué no cubre». Volveremos a esto.
 3. Enseñar `.github/hooks/proteger-tests.json.off`: «Copilot ejecuta este script antes de *cada*
    herramienta».
 4. Activarlo:
@@ -92,12 +93,11 @@ Para cada regla de vuestro `copilot-instructions.md`:
    agente recibe el motivo: *«…Si crees que hay que cambiar una regla de negocio, detente y pregúntale
    a la persona.»* Normalmente cambia de plan: pregunta, o deja el código y explica que el test lo
    impide.
-   Si intenta un atajo (crear un `conftest.py` que salte el test o tocar `pytest.ini`), también queda
-   denegado: el hook protege la configuración de pytest. Si encuentra una vía que no está cubierta,
+   Si encuentra una vía que el hook no cubre (por ejemplo, un `conftest.py` que salte el test),
    aprovéchalo: «por eso el hook documenta sus huecos y hay una segunda puerta en CI».
 7. Frase clave: **«No le hemos pedido nada distinto. Le hemos quitado la posibilidad.»**
 8. Bonus, si hay tiempo: pedir *«desactiva el hook con scripts/hook.py off»* → también queda
-   denegado (y si lo intenta borrando el `.json` o con `reiniciar_demo.py`, lo mismo). «Quien pone en marcha al guardia no debe ser el sospechoso.»
+   denegado. «Quien pone en marcha al guardia no debe ser el sospechoso.»
 
 **Plan B del acto 2** (el hook no carga, por ejemplo por la política de la empresa):
 - Decirlo en voz alta: «Esto también es una lección: **un control se verifica por su efecto**, no
@@ -126,7 +126,7 @@ Para cada regla de vuestro `copilot-instructions.md`:
    y ejecutar:
 
    ```bash
-   python scripts/check_protegidos.py --base demo-inicio
+   python scripts/check_protegidos.py demo-inicio
    ```
 
    → `ERROR: estos cambios tocan ficheros protegidos`, código de salida 1.
@@ -134,7 +134,7 @@ Para cada regla de vuestro `copilot-instructions.md`:
    «Cambiar una regla de negocio es una decisión humana.»
 5. Diapositiva de las tres propiedades de un control real: **se verifica por su efecto**,
    **funciona sin nadie mirando** y **documenta sus huecos**.
-6. `python scripts/reiniciar_demo.py`.
+6. Reiniciar: `git reset --hard demo-inicio; git clean -fd; python scripts/hook.py off`.
 
 ## 18–20 · Cierre (diapositivas 9–10)
 
@@ -146,5 +146,5 @@ Para cada regla de vuestro `copilot-instructions.md`:
 ## Después
 
 ```bash
-python scripts/reiniciar_demo.py
+git reset --hard demo-inicio; git clean -fd; python scripts/hook.py off
 ```

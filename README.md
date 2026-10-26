@@ -17,11 +17,10 @@ de José Ramón Pérez Agüera (Gemba).
 | `facturacion.py` | Módulo de ejemplo: total de factura con IVA del 21 % y descuento máximo del 50 % |
 | `tests/` | Tests de negocio. **Son la especificación** y están protegidos |
 | `.github/copilot-instructions.md` | La regla en prosa: «Nunca modifiques ficheros en `tests/`» |
-| `.github/hooks/proteger_tests.py` | **La puerta**: hook `preToolUse` que deniega escrituras en `tests/`, en la configuración de pytest y en el propio guardia |
+| `.github/hooks/proteger_tests.py` | **La puerta**: hook `preToolUse` (unas 40 líneas) que deniega escrituras en `tests/` y en el propio guardia |
 | `.github/hooks/proteger-tests.json.off` | Configuración del hook, **desactivada**. `scripts/hook.py on` la copia a `proteger-tests.json` (ignorado por git), que es el que carga Copilot |
 | `scripts/hook.py` | Interruptor: `on`, `off`, `estado` |
-| `scripts/reiniciar_demo.py` | Vuelve a la etiqueta `demo-inicio` entre ensayos: deshace commits, cambios y ficheros nuevos (pide confirmación) |
-| `scripts/check_protegidos.py` | **Segunda puerta**: falla si los cambios tocan `tests/`, `.github/`, `scripts/` o la configuración de pytest |
+| `scripts/check_protegidos.py` | **Segunda puerta**: falla si los cambios tocan `tests/` o `.github/` |
 | `.github/workflows/ficheros-protegidos.yml` | Ejecuta esa comprobación en cada PR (GitHub Actions) |
 | `tests_hook/` | Tests del hook y de los scripts, verificados **por su efecto** |
 | `docs/` | Diseño y plan de la demo |
@@ -68,8 +67,8 @@ En los ejemplos, `python` es `python3` en Linux/macOS, y `.venv\Scripts\python` 
 | Activar el hook | `python scripts/hook.py on` y comprobar en el chat con `/hooks` |
 | Desactivar el hook | `python scripts/hook.py off` |
 | ¿Está activo? | `python scripts/hook.py estado` |
-| Reiniciar la demo | `python scripts/reiniciar_demo.py` (**borra** todo lo posterior a `demo-inicio`; si cambias el repo a propósito, `git tag -f demo-inicio`) |
-| Check de CI en local | `python scripts/check_protegidos.py --base demo-inicio` |
+| Reiniciar la demo | `git reset --hard demo-inicio; git clean -fd; python scripts/hook.py off` (**borra** todo lo posterior a `demo-inicio`; si cambias el repo a propósito, `git tag -f demo-inicio`) |
+| Check de CI en local | `python scripts/check_protegidos.py demo-inicio` |
 
 ### Probar el hook a mano (también es el plan B del acto 2)
 
@@ -90,7 +89,7 @@ Windows (PowerShell):
 Resultado esperado:
 
 ```json
-{"permissionDecision": "deny", "permissionDecisionReason": "Los tests, su configuración y el propio guardia están protegidos: ..."}
+{"permissionDecision": "deny", "permissionDecisionReason": "tests/ está protegido: ..."}
 ```
 
 Y uno que debe pasar (ejecutar los tests no es escribir en ellos):
@@ -113,7 +112,7 @@ HOOK_LOG=1 code .
 $env:HOOK_LOG = "1"; code .
 ```
 
-Si aparece una herramienta de lectura o de terminal que no esté en `LECTURA` o `TERMINAL`
+Si aparece una herramienta de lectura o de terminal que no esté en `SOLO_LECTURA` o `TERMINAL`
 (en `proteger_tests.py`), añádela allí.
 
 ## Checklist antes de la charla (en el PC donde la vas a dar)
@@ -132,7 +131,7 @@ Hazla **días antes**, no el mismo día:
 6. [ ] **Ensayo completo** con el modelo que vayas a usar en la charla (selector de modelo del chat),
        siguiendo [GUION.md](GUION.md). Ajusta los prompts si hace falta.
 7. [ ] **Graba** un ensayo del acto 1 en el que Copilot edite el test (respaldo por si ese día obedece).
-8. [ ] `python scripts/reiniciar_demo.py` y `python scripts/hook.py estado` → `Hook DESACTIVADO`.
+8. [ ] Reiniciar (`git reset --hard demo-inicio; git clean -fd; python scripts/hook.py off`) y `python scripts/hook.py estado` → `Hook DESACTIVADO`.
 
 ## Resolución de problemas
 
@@ -143,7 +142,7 @@ Hazla **días antes**, no el mismo día:
 | Todo queda bloqueado | El hook falla al arrancar (por ejemplo, `python` no encontrado). Si el hook da error, Copilot **deniega** | Probar el hook a mano desde la terminal |
 | A veces deja pasar | Si el hook tarda más que `timeoutSec`, Copilot **deja pasar** la acción (fail-open) | Ver si el antivirus ralentiza el arranque de Python; subir `timeoutSec` |
 | `pytest` no encuentra `facturacion` | Se ejecuta desde otra carpeta | Ejecutar desde la raíz del repo |
-| `reiniciar_demo.py` falla | No existe la etiqueta `demo-inicio` | `git tag demo-inicio <commit-inicial-de-la-demo>` |
+| `git reset --hard demo-inicio` falla | No existe la etiqueta `demo-inicio` | `git tag demo-inicio <commit-inicial-de-la-demo>` |
 
 ## Límites conocidos
 
